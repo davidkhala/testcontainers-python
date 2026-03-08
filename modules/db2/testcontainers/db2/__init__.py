@@ -2,8 +2,7 @@ from os import environ
 from typing import Optional
 
 from testcontainers.core.generic import DbContainer
-from testcontainers.core.waiting_utils import wait_container_is_ready, wait_for_logs
-
+from testcontainers.core.waiting_utils import wait_container_is_ready, LogMessageWaitStrategy
 
 class Db2Container(DbContainer):
     """
@@ -53,7 +52,7 @@ class Db2Container(DbContainer):
 
     @wait_container_is_ready()
     def _connect(self) -> None:
-        wait_for_logs(self, predicate="Setup has completed")
+        self.waiting_for(LogMessageWaitStrategy("Setup has completed"))
 
     def get_connection_url(self) -> str:
         return super()._create_connection_url(
